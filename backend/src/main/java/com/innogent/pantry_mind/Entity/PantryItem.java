@@ -1,4 +1,4 @@
-package com.innogent.pantry_mind.models;
+package com.innogent.pantry_mind.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
