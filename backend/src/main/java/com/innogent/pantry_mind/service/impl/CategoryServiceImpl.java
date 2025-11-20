@@ -1,0 +1,48 @@
+package com.innogent.pantry_mind.service.impl;
+
+import com.innogent.pantry_mind.dto.requestdto.CategoryRequestDTO;
+import com.innogent.pantry_mind.dto.responsedto.CategoryResponseDTO;
+import com.innogent.pantry_mind.entity.Category;
+import com.innogent.pantry_mind.exception.DuplicateResourceException;
+import com.innogent.pantry_mind.exception.ResourceNotFoundException;
+import com.innogent.pantry_mind.mapper.CategoryMapper;
+import com.innogent.pantry_mind.repository.CategoryRepository;
+import com.innogent.pantry_mind.service.CategoryService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper = new CategoryMapper();
+    
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    @Override
+    public CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) {
+        if (categoryRepository.existsByName(categoryRequestDTO.getName())) {
+            throw new DuplicateResourceException("Category with name '" + categoryRequestDTO.getName() + "' already exists");
+        }
+        Category category = categoryMapper.toEntity(categoryRequestDTO);
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.toResponseDto(savedCategory);
+    }
+
+    @Override
+    public CategoryResponseDTO findById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+        return categoryMapper.toResponseDto(category);
+    }
+
+    @Override
+    public List<CategoryResponseDTO> findAll() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(categoryMapper::toResponseDto)
+                .toList();
+    }
+}
