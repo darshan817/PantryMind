@@ -1,5 +1,5 @@
 // D
-package com.innogent.pantry_mind.dto.requestdto;
+package com.innogent.pantry_mind.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

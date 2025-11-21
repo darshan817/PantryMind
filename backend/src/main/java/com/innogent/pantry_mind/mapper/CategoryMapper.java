@@ -1,7 +1,7 @@
 package com.innogent.pantry_mind.mapper;
 
-import com.innogent.pantry_mind.dto.requestdto.CategoryRequestDTO;
-import com.innogent.pantry_mind.dto.responsedto.CategoryResponseDTO;
+import com.innogent.pantry_mind.dto.request.CategoryRequestDTO;
+import com.innogent.pantry_mind.dto.response.CategoryResponseDTO;
 import com.innogent.pantry_mind.entity.Category;
 
 public class CategoryMapper {

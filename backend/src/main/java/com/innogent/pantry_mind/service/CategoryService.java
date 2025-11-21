@@ -1,7 +1,8 @@
 package com.innogent.pantry_mind.service;
 
-import com.innogent.pantry_mind.dto.requestdto.CategoryRequestDTO;
-import com.innogent.pantry_mind.dto.responsedto.CategoryResponseDTO;
+import com.innogent.pantry_mind.dto.request.CategoryRequestDTO;
+import com.innogent.pantry_mind.dto.response.CategoryResponseDTO;
+
 import java.util.List;
 
 public interface CategoryService {

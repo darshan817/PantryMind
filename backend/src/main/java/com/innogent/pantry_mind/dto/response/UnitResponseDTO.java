@@ -1,4 +1,4 @@
-package com.innogent.pantry_mind.dto.responsedto;
+package com.innogent.pantry_mind.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

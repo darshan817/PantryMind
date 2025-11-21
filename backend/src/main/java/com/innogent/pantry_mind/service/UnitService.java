@@ -1,7 +1,8 @@
 package com.innogent.pantry_mind.service;
 
-import com.innogent.pantry_mind.dto.requestdto.UnitRequestDTO;
-import com.innogent.pantry_mind.dto.responsedto.UnitResponseDTO;
+import com.innogent.pantry_mind.dto.request.UnitRequestDTO;
+import com.innogent.pantry_mind.dto.response.UnitResponseDTO;
+
 import java.util.List;
 
 public interface UnitService {

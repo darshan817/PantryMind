@@ -1,7 +1,7 @@
 package com.innogent.pantry_mind.mapper;
 
-import com.innogent.pantry_mind.dto.requestdto.UnitRequestDTO;
-import com.innogent.pantry_mind.dto.responsedto.UnitResponseDTO;
+import com.innogent.pantry_mind.dto.request.UnitRequestDTO;
+import com.innogent.pantry_mind.dto.response.UnitResponseDTO;
 import com.innogent.pantry_mind.entity.Unit;
 
 public class UnitMapper {

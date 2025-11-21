@@ -6,6 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PantryApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PantryApplication.class, args);
+       SpringApplication.run(PantryApplication.class, args);
     }
 }

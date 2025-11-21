@@ -1,5 +1,4 @@
-// D
-package com.innogent.pantry_mind.dto.requestdto;
+package com.innogent.pantry_mind.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryRequestDTO {
+public class CategoryResponseDTO {
+    private Long id;
     private String name;
     private String description;
 }
