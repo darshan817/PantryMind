@@ -2,6 +2,9 @@ package com.innogent.pantry_mind.service.impl;
 
 import com.innogent.pantry_mind.dto.request.LoginRequestDTO;
 import com.innogent.pantry_mind.dto.request.RegisterRequestDTO;
+import com.innogent.pantry_mind.dto.request.UpdateUserRequestDTO;
+
+import java.util.List;
 import com.innogent.pantry_mind.dto.response.UserResponseDTO;
 import com.innogent.pantry_mind.entity.User;
 import com.innogent.pantry_mind.exception.ResourceNotFoundException;
@@ -52,6 +55,33 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toResponse(user);
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public UserResponseDTO updateUser(Long id, UpdateUserRequestDTO request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        if (request.getUsername() != null) user.setUsername(request.getUsername());
+        if (request.getName() != null) user.setName(request.getName());
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
+        
+        User updated = userRepository.save(user);
+        return userMapper.toResponse(updated);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepository.delete(user);
     }
 
 }

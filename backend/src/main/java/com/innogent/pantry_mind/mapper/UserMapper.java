@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "kitchenId", ignore = true)
+    @Mapping(target = "kitchen", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "googleId", ignore = true)
     @Mapping(target = "isActive", constant = "true")

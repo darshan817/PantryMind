@@ -3,20 +3,13 @@ package com.innogent.pantry_mind.mapper;
 import com.innogent.pantry_mind.dto.request.CategoryRequestDTO;
 import com.innogent.pantry_mind.dto.response.CategoryResponseDTO;
 import com.innogent.pantry_mind.entity.Category;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class CategoryMapper {
-    public CategoryResponseDTO toResponseDto(Category category) {
-        CategoryResponseDTO dto = new CategoryResponseDTO();
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-        dto.setDescription(category.getDescription());
-        return dto;
-    }
+@Mapper(componentModel = "spring")
+public interface CategoryMapper {
+    CategoryResponseDTO toResponse(Category category);
     
-    public Category toEntity(CategoryRequestDTO categoryRequestDTO) {
-        Category category = new Category();
-        category.setName(categoryRequestDTO.getName());
-        category.setDescription(categoryRequestDTO.getDescription());
-        return category;
-    }
+    @Mapping(target = "id", ignore = true)
+    Category toEntity(CategoryRequestDTO request);
 }
