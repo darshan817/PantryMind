@@ -15,11 +15,10 @@ import java.util.List;
 @Service
 public class UnitServiceImpl implements UnitService {
     private final UnitRepository unitRepository;
-    private final UnitMapper unitMapper;
+    private final UnitMapper unitMapper = new UnitMapper();
     
-    public UnitServiceImpl(UnitRepository unitRepository, UnitMapper unitMapper) {
+    public UnitServiceImpl(UnitRepository unitRepository) {
         this.unitRepository = unitRepository;
-        this.unitMapper = unitMapper;
     }
 
     @Override
@@ -29,21 +28,21 @@ public class UnitServiceImpl implements UnitService {
         }
         Unit unit = unitMapper.toEntity(unitRequestDTO);
         Unit savedUnit = unitRepository.save(unit);
-        return unitMapper.toResponse(savedUnit);
+        return unitMapper.toResponseDto(savedUnit);
     }
 
     @Override
     public UnitResponseDTO findById(Long id) {
         Unit unit = unitRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Unit not found with id: " + id));
-        return unitMapper.toResponse(unit);
+        return unitMapper.toResponseDto(unit);
     }
 
     @Override
     public List<UnitResponseDTO> findAll() {
         return unitRepository.findAll()
                 .stream()
-                .map(unitMapper::toResponse)
+                .map(unitMapper::toResponseDto)
                 .toList();
     }
 }

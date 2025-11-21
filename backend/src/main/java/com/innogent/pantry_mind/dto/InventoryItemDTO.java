@@ -1,19 +1,10 @@
-package com.innogent.pantry_mind.entity;
+package com.innogent.pantry_mind.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.util.Date;
 
 @Data
-@Entity
-public class InventoryItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class InventoryItemDTO {
     private Long id;
     private String name;
     private String description;
@@ -24,7 +15,5 @@ public class InventoryItem {
     private Long quantity;
     private String location;
     private Date expiryDate;
-
-    @CreationTimestamp
     private Date created_at;
 }
