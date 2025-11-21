@@ -15,11 +15,10 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
+    private final CategoryMapper categoryMapper = new CategoryMapper();
     
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.categoryMapper = categoryMapper;
     }
 
     @Override
@@ -29,21 +28,21 @@ public class CategoryServiceImpl implements CategoryService {
         }
         Category category = categoryMapper.toEntity(categoryRequestDTO);
         Category savedCategory = categoryRepository.save(category);
-        return categoryMapper.toResponse(savedCategory);
+        return categoryMapper.toResponseDto(savedCategory);
     }
 
     @Override
     public CategoryResponseDTO findById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
-        return categoryMapper.toResponse(category);
+        return categoryMapper.toResponseDto(category);
     }
 
     @Override
     public List<CategoryResponseDTO> findAll() {
         return categoryRepository.findAll()
                 .stream()
-                .map(categoryMapper::toResponse)
+                .map(categoryMapper::toResponseDto)
                 .toList();
     }
 }

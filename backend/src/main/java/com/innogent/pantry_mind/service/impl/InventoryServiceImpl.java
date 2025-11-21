@@ -1,8 +1,8 @@
 package com.innogent.pantry_mind.service.impl;
 
-import com.innogent.pantry_mind.dto.request.CreateInventoryItemRequestDTO;
-import com.innogent.pantry_mind.dto.response.InventoryItemResponseDTO;
-import com.innogent.pantry_mind.dto.request.UpdateInventoryItemRequestDTO;
+import com.innogent.pantry_mind.dto.CreateInventoryItemDTO;
+import com.innogent.pantry_mind.dto.InventoryItemDTO;
+import com.innogent.pantry_mind.dto.UpdateInventoryItemDTO;
 import com.innogent.pantry_mind.entity.InventoryItem;
 import com.innogent.pantry_mind.mapper.InventoryItemMapper;
 import com.innogent.pantry_mind.repository.InventoryItemRepository;
@@ -23,35 +23,35 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryItemMapper mapper;
 
     @Override
-    public InventoryItemResponseDTO addInventoryItem(CreateInventoryItemRequestDTO dto) {
+    public InventoryItemDTO addInventoryItem(CreateInventoryItemDTO dto) {
         InventoryItem entity = mapper.toEntity(dto);
         InventoryItem saved = inventoryItemRepository.save(entity);
-        return mapper.toResponse(saved);
+        return mapper.toDTO(saved);
     }
 
     @Override
-    public List<InventoryItemResponseDTO> getAllInventoryItems() {
+    public List<InventoryItemDTO> getAllInventoryItems() {
         return inventoryItemRepository.findAll().stream()
-                .map(mapper::toResponse)
+                .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public InventoryItemResponseDTO getInventoryItemById(Long id) {
+    public InventoryItemDTO getInventoryItemById(Long id) {
         return inventoryItemRepository.findById(id)
-                .map(mapper::toResponse)
+                .map(mapper::toDTO)
                 .orElseThrow(() -> new ItemNotFoundException(id));
     }
 
     @Override
-    public InventoryItemResponseDTO updateInventoryItem(UpdateInventoryItemRequestDTO dto, Long id) {
+    public InventoryItemDTO updateInventoryItem(UpdateInventoryItemDTO dto, Long id) {
         InventoryItem entity = inventoryItemRepository.findById(id)
                 .orElseThrow(() -> new ItemNotFoundException(id));
 
         mapper.updateEntity(entity, dto);
 
         InventoryItem updated = inventoryItemRepository.save(entity);
-        return mapper.toResponse(updated);
+        return mapper.toDTO(updated);
     }
 
     @Override

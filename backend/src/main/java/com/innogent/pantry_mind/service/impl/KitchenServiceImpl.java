@@ -24,20 +24,20 @@ public class KitchenServiceImpl implements KitchenService {
     public KitchenResponseDTO create(KitchenRequestDTO requestDTO) {
         Kitchen kitchen = kitchenMapper.toEntity(requestDTO);
         Kitchen saved = kitchenRepository.save(kitchen);
-        return kitchenMapper.toResponse(saved);
+        return kitchenMapper.toResponseDTO(saved);
     }
 
     @Override
     public KitchenResponseDTO getById(Long id) {
         Kitchen kitchen = kitchenRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Kitchen not found with id: " + id));
-        return kitchenMapper.toResponse(kitchen);
+        return kitchenMapper.toResponseDTO(kitchen);
     }
 
     @Override
     public List<KitchenResponseDTO> getAll() {
         return kitchenRepository.findAll().stream()
-                .map(kitchenMapper::toResponse)
+                .map(kitchenMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class KitchenServiceImpl implements KitchenService {
                 .orElseThrow(() -> new ResourceNotFoundException("Kitchen not found with id: " + id));
         kitchen.setName(requestDTO.getName());
         Kitchen updated = kitchenRepository.save(kitchen);
-        return kitchenMapper.toResponse(updated);
+        return kitchenMapper.toResponseDTO(updated);
     }
 
     @Override
