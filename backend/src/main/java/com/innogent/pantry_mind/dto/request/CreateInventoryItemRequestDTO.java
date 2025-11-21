@@ -1,4 +1,4 @@
-package com.innogent.pantry_mind.dto;
+package com.innogent.pantry_mind.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,13 +7,13 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class CreateInventoryItemDTO {
+public class CreateInventoryItemRequestDTO {
     @NotBlank(message = "Name is required")
     private String name;
     
     private String description;
-    private Long category_id;
-    private Long unit_id;
+    private Long categoryId;
+    private Long unitId;
 
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be positive")

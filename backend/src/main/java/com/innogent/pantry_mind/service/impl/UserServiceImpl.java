@@ -1,11 +1,16 @@
 package com.innogent.pantry_mind.service.impl;
-
+//abhi completed nhi h
 import com.innogent.pantry_mind.dto.request.LoginRequestDTO;
 import com.innogent.pantry_mind.dto.request.RegisterRequestDTO;
+import com.innogent.pantry_mind.dto.request.UpdateUserRequestDTO;
+
+import java.util.List;
 import com.innogent.pantry_mind.dto.response.UserResponseDTO;
+import com.innogent.pantry_mind.entity.Role;
 import com.innogent.pantry_mind.entity.User;
 import com.innogent.pantry_mind.exception.ResourceNotFoundException;
 import com.innogent.pantry_mind.mapper.UserMapper;
+import com.innogent.pantry_mind.repository.RoleRepository;
 import com.innogent.pantry_mind.repository.UserRepository;
 import com.innogent.pantry_mind.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserResponseDTO register(RegisterRequestDTO request){
@@ -24,11 +30,17 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already registered");
         });
 
-        userRepository.findByEmail(request.getUsername()).ifPresent(u->{
+        userRepository.findByUsername(request.getUsername()).ifPresent(u->{
             throw new RuntimeException("username already registered");
         });
 
         User user = userMapper.toUser(request);
+        
+        // Set default USER role
+        Role userRole = roleRepository.findByName("USER")
+                .orElseGet(() -> roleRepository.save(Role.builder().name("USER").build()));
+        user.setRole(userRole);
+        
         User saved = userRepository.save(user);
 
         return userMapper.toResponse(saved);
@@ -54,4 +66,46 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user);
     }
 
+    @Override
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public UserResponseDTO updateUser(Long id, UpdateUserRequestDTO request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        if (request.getUsername() != null) user.setUsername(request.getUsername());
+        if (request.getName() != null) user.setName(request.getName());
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
+        
+        User updated = userRepository.save(user);
+        return userMapper.toResponse(updated);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // TODO: Generate reset token and send email
+        // For now, just log the action
+        System.out.println("Password reset requested for: " + email);
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        // TODO: Validate token and update password
+        // For now, just log the action
+        System.out.println("Password reset with token: " + token);
+    }
 }

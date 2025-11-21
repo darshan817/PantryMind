@@ -1,33 +1,41 @@
 package com.innogent.pantry_mind.controller;
 
-
-import com.innogent.pantry_mind.dto.request.LoginRequestDTO;
-import com.innogent.pantry_mind.dto.request.RegisterRequestDTO;
+import com.innogent.pantry_mind.config.JwtUtil;
+import com.innogent.pantry_mind.dto.request.*;
 import com.innogent.pantry_mind.dto.response.UserResponseDTO;
 import com.innogent.pantry_mind.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 @CrossOrigin
-
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterRequestDTO request){
+    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         UserResponseDTO resp = userService.register(request);
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        UserResponseDTO resp = userService.login(request);
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        
+        String token = jwtUtil.generateToken(request.getEmail());
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @GetMapping("/{id}")
@@ -36,4 +44,32 @@ public class UserController {
         return ResponseEntity.ok(resp);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequestDTO request) {
+        UserResponseDTO resp = userService.updateUser(id, request);
+        return ResponseEntity.ok(resp);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
+        userService.forgotPassword(request.getEmail());
+        return ResponseEntity.ok(Map.of("message", "Password reset email sent"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        userService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
+    }
 }

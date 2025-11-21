@@ -2,6 +2,7 @@ package com.innogent.pantry_mind.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,7 +15,8 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String username;
@@ -23,8 +25,15 @@ public class User {
     private String passwordHash;
     private String googleId;
     private Boolean isActive = true;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    private Long kitchenId;
-    private String role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kitchen_id")
+    private Kitchen kitchen;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

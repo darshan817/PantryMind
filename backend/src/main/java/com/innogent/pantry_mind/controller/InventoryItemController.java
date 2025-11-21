@@ -1,8 +1,8 @@
 package com.innogent.pantry_mind.controller;
 
-import com.innogent.pantry_mind.dto.CreateInventoryItemDTO;
-import com.innogent.pantry_mind.dto.InventoryItemDTO;
-import com.innogent.pantry_mind.dto.UpdateInventoryItemDTO;
+import com.innogent.pantry_mind.dto.request.CreateInventoryItemRequestDTO;
+import com.innogent.pantry_mind.dto.response.InventoryItemResponseDTO;
+import com.innogent.pantry_mind.dto.request.UpdateInventoryItemRequestDTO;
 import com.innogent.pantry_mind.service.impl.InventoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,26 +23,26 @@ public class InventoryItemController {
 
     @PostMapping
     @Operation(summary = "Create a new inventory item")
-    public ResponseEntity<InventoryItemDTO> createItem(@Valid @RequestBody CreateInventoryItemDTO dto) {
+    public ResponseEntity<InventoryItemResponseDTO> createItem(@Valid @RequestBody CreateInventoryItemRequestDTO dto) {
         return ResponseEntity.ok(inventoryItemService.addInventoryItem(dto));
     }
 
     @GetMapping
     @Operation(summary = "Get all inventory items")
-    public ResponseEntity<List<InventoryItemDTO>> getAllItems() {
+    public ResponseEntity<List<InventoryItemResponseDTO>> getAllItems() {
         return ResponseEntity.ok(inventoryItemService.getAllInventoryItems());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get inventory item by ID")
-    public ResponseEntity<InventoryItemDTO> getItemById(@PathVariable Long id) {
-        InventoryItemDTO item = inventoryItemService.getInventoryItemById(id);
+    public ResponseEntity<InventoryItemResponseDTO> getItemById(@PathVariable Long id) {
+        InventoryItemResponseDTO item = inventoryItemService.getInventoryItemById(id);
         return item != null ? ResponseEntity.ok(item) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update inventory item")
-    public ResponseEntity<InventoryItemDTO> updateItem(@PathVariable Long id, @Valid @RequestBody UpdateInventoryItemDTO dto) {
+    public ResponseEntity<InventoryItemResponseDTO> updateItem(@PathVariable Long id, @Valid @RequestBody UpdateInventoryItemRequestDTO dto) {
         return ResponseEntity.ok(inventoryItemService.updateInventoryItem(dto, id));
     }
 

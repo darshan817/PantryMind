@@ -1,48 +1,68 @@
 package com.innogent.pantry_mind.mapper;
 
-import com.innogent.pantry_mind.dto.CreateInventoryItemDTO;
-import com.innogent.pantry_mind.dto.InventoryItemDTO;
-import com.innogent.pantry_mind.dto.UpdateInventoryItemDTO;
+import com.innogent.pantry_mind.dto.request.CreateInventoryItemRequestDTO;
+import com.innogent.pantry_mind.dto.response.InventoryItemResponseDTO;
+import com.innogent.pantry_mind.dto.request.UpdateInventoryItemRequestDTO;
 import com.innogent.pantry_mind.entity.InventoryItem;
-import org.springframework.stereotype.Component;
+import com.innogent.pantry_mind.entity.Category;
+import com.innogent.pantry_mind.entity.Unit;
+import com.innogent.pantry_mind.repository.CategoryRepository;
+import com.innogent.pantry_mind.repository.UnitRepository;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component
-public class InventoryItemMapper {
+@Mapper(componentModel = "spring")
+public abstract class InventoryItemMapper {
 
-    public InventoryItemDTO toDTO(InventoryItem entity) {
-        InventoryItemDTO dto = new InventoryItemDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-        dto.setCategory_id(entity.getCategory_id());
-        dto.setUnit_id(entity.getUnit_id());
-        dto.setCreated_by(entity.getCreated_by());
-        dto.setQuantity(entity.getQuantity());
-        dto.setLocation(entity.getLocation());
-        dto.setExpiryDate(entity.getExpiryDate());
-        dto.setCreated_at(entity.getCreated_at());
-        return dto;
+    @Autowired
+    protected CategoryRepository categoryRepository;
+    
+    @Autowired
+    protected UnitRepository unitRepository;
+
+    @Mapping(target = "categoryId", source = "category", qualifiedByName = "categoryToId")
+    @Mapping(target = "unitId", source = "unit", qualifiedByName = "unitToId")
+    @Mapping(target = "categoryName", source = "category.name")
+    @Mapping(target = "unitName", source = "unit.name")
+    @Mapping(target = "kitchenId", source = "kitchen_id")
+    @Mapping(target = "createdBy", source = "created_by")
+    @Mapping(target = "createdAt", source = "created_at")
+    public abstract InventoryItemResponseDTO toResponse(InventoryItem entity);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created_at", ignore = true)
+    @Mapping(target = "kitchen_id", ignore = true)
+    @Mapping(target = "created_by", ignore = true)
+    @Mapping(target = "category", source = "categoryId", qualifiedByName = "idToCategory")
+    @Mapping(target = "unit", source = "unitId", qualifiedByName = "idToUnit")
+    public abstract InventoryItem toEntity(CreateInventoryItemRequestDTO dto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created_at", ignore = true)
+    @Mapping(target = "kitchen_id", ignore = true)
+    @Mapping(target = "created_by", ignore = true)
+    @Mapping(target = "category", source = "categoryId", qualifiedByName = "idToCategory")
+    @Mapping(target = "unit", source = "unitId", qualifiedByName = "idToUnit")
+    public abstract void updateEntity(@MappingTarget InventoryItem entity, UpdateInventoryItemRequestDTO dto);
+
+    @Named("categoryToId")
+    protected Long categoryToId(Category category) {
+        return category != null ? category.getId() : null;
     }
 
-    public InventoryItem toEntity(CreateInventoryItemDTO dto) {
-        InventoryItem entity = new InventoryItem();
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setCategory_id(dto.getCategory_id());
-        entity.setUnit_id(dto.getUnit_id());
-        entity.setQuantity(dto.getQuantity());
-        entity.setLocation(dto.getLocation());
-        entity.setExpiryDate(dto.getExpiryDate());
-        return entity;
+    @Named("unitToId")
+    protected Long unitToId(Unit unit) {
+        return unit != null ? unit.getId() : null;
     }
 
-    public void updateEntity(InventoryItem entity, UpdateInventoryItemDTO dto) {
-        if (dto.getName() != null) entity.setName(dto.getName());
-        if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
-        if (dto.getCategory_id() != null) entity.setCategory_id(dto.getCategory_id());
-        if (dto.getUnit_id() != null) entity.setUnit_id(dto.getUnit_id());
-        if (dto.getQuantity() != null) entity.setQuantity(dto.getQuantity());
-        if (dto.getLocation() != null) entity.setLocation(dto.getLocation());
-        if (dto.getExpiryDate() != null) entity.setExpiryDate(dto.getExpiryDate());
+    @Named("idToCategory")
+    protected Category idToCategory(Long categoryId) {
+        return categoryId != null ? categoryRepository.findById(categoryId).orElse(null) : null;
+    }
+
+    @Named("idToUnit")
+    protected Unit idToUnit(Long unitId) {
+        return unitId != null ? unitRepository.findById(unitId).orElse(null) : null;
     }
 }
