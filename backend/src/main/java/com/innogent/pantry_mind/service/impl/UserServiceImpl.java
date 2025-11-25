@@ -14,11 +14,13 @@ import com.innogent.pantry_mind.repository.RoleRepository;
 import com.innogent.pantry_mind.repository.UserRepository;
 import com.innogent.pantry_mind.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
@@ -35,7 +37,8 @@ public class UserServiceImpl implements UserService {
         });
 
         User user = userMapper.toUser(request);
-        
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+
         // Set default USER role
         Role userRole = roleRepository.findByName("USER")
                 .orElseGet(() -> roleRepository.save(Role.builder().name("USER").build()));
@@ -51,8 +54,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // NOTE: plain comparison for Phase-2. Hashing to be added in Phase-11.-----------------------
-        if (user.getPasswordHash() == null || !user.getPasswordHash().equals(req.getPassword())) {
+        // modify by badal after applying jwt ----
+
+        if (user.getPasswordHash() == null || !passwordEncoder.matches(req.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid credentials");
         }
 

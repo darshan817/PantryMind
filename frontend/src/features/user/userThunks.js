@@ -24,3 +24,15 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await axiosClient.post("/user/logout");
+      return true;
+    } catch (err) {
+      return rejectWithValue("Logout failed");
+    }
+  }
+);
