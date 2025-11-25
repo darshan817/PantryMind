@@ -35,5 +35,5 @@ build/
 # Environment variables
 .env
 
-backend/src/main/resources/application.properties
-
+# Application configuration (contains sensitive data)
+src/main/resources/application.properties
