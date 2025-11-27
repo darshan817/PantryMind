@@ -11,4 +11,6 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private Boolean isActive;
+    private String role;
+    private KitchenResponseDTO kitchen;
 }

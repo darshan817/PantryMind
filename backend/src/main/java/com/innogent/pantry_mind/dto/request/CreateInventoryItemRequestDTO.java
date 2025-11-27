@@ -12,8 +12,10 @@ public class CreateInventoryItemRequestDTO {
     private String name;
     
     private String description;
-    private Long categoryId;
-    private Long unitId;
+    private Long category_id;
+    private Long unit_id;
+    private Long kitchen_id;
+    private Long created_by;
 
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be positive")

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/user/userThunks";
-import Input from "../components/common/Input";
+import { registerUser } from "../../features/auth/authThunks";
+import { Input } from "../../components/ui";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { loading, user } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     username: "",
@@ -13,6 +15,13 @@ export default function Register() {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      navigate("/kitchen-setup");
+    }
+  }, [user, navigate]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

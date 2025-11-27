@@ -1,16 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/user/userThunks";
-import Input from "../components/common/Input";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../features/auth/authThunks";
+import { Input } from "../../components/ui";
 
 export default function Login() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { loading, user, error } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  // Role-based redirect after login
+  useEffect(() => {
+    if (user) {
+      console.log(" User role on login:", user.role);
+      if (user.role === "ADMIN") {
+        navigate("/admin");
+      } else if (user.role === "MEMBER") {
+        navigate("/member");
+      } else {
+        navigate("/kitchen-setup");
+      }
+    }
+  }, [user, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,6 +47,13 @@ export default function Login() {
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
           Welcome Back
         </h2>
+
+        {/* Error display */}
+        {error && (
+          <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-sm">
+            {error.message || error}
+          </div>
+        )}
 
         <div className="space-y-4">
           <Input
@@ -62,7 +85,10 @@ export default function Login() {
 
         <p className="text-center mt-4 text-sm text-gray-500">
           Forgot password?{" "}
-          <span className="text-[#1fa74a] hover:underline cursor-pointer">
+          <span 
+            onClick={() => navigate("/forgot-password")}
+            className="text-[#1fa74a] hover:underline cursor-pointer"
+          >
             Reset
           </span>
         </p>

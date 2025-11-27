@@ -31,10 +31,10 @@ public abstract class InventoryItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created_at", ignore = true)
-    @Mapping(target = "kitchen_id", ignore = true)
-    @Mapping(target = "created_by", ignore = true)
-    @Mapping(target = "category", source = "categoryId", qualifiedByName = "idToCategory")
-    @Mapping(target = "unit", source = "unitId", qualifiedByName = "idToUnit")
+    @Mapping(target = "kitchen_id", source = "kitchen_id")
+    @Mapping(target = "created_by", source = "created_by")
+    @Mapping(target = "category", source = "category_id", qualifiedByName = "idToCategory")
+    @Mapping(target = "unit", source = "unit_id", qualifiedByName = "idToUnit")
     public abstract InventoryItem toEntity(CreateInventoryItemRequestDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosClient from "../../api/axiosClient";
+import axiosClient from "../../services/api";
 
 export const registerUser = createAsyncThunk(
   "user/register",
@@ -24,7 +24,7 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
-<<<<<<< HEAD
+
 
 export const logoutUser = createAsyncThunk(
   "user/logout",
@@ -37,5 +37,3 @@ export const logoutUser = createAsyncThunk(
     }
   }
 );
-=======
->>>>>>> 6bd847bd126260b6bd160a5f6fc8318ae04d4487

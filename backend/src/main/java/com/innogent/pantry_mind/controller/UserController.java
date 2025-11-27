@@ -23,9 +23,16 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-        UserResponseDTO resp = userService.register(request);
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
+        UserResponseDTO user = userService.register(request);
+        
+        // Generate token after registration
+        String token = jwtUtil.generateToken(request.getEmail());
+        
+        return ResponseEntity.ok(Map.of(
+            "user", user,
+            "token", token
+        ));
     }
 
     @PostMapping("/login")
@@ -34,8 +41,14 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         
+        // Get user data
+        UserResponseDTO user = userService.getUserByEmail(request.getEmail());
         String token = jwtUtil.generateToken(request.getEmail());
-        return ResponseEntity.ok(Map.of("token", token));
+        
+        return ResponseEntity.ok(Map.of(
+            "user", user,
+            "token", token
+        ));
     }
 
     @GetMapping("/{id}")
@@ -71,5 +84,13 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         userService.resetPassword(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
+    }
+
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<?> updateUserRole(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        String roleName = request.get("role"); // "ADMIN" or "MEMBER"
+        userService.updateUserRole(id, roleName);
+        return ResponseEntity.ok(Map.of("message", "Role updated successfully"));
     }
 }
