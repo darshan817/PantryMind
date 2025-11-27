@@ -24,24 +24,21 @@ public abstract class InventoryItemMapper {
     @Mapping(target = "unitId", source = "unit", qualifiedByName = "unitToId")
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "unitName", source = "unit.name")
-    @Mapping(target = "kitchenId", source = "kitchen_id")
-    @Mapping(target = "createdBy", source = "created_by")
-    @Mapping(target = "createdAt", source = "created_at")
     public abstract InventoryItemResponseDTO toResponse(InventoryItem entity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "created_at", ignore = true)
-    @Mapping(target = "kitchen_id", source = "kitchen_id")
-    @Mapping(target = "created_by", source = "created_by")
-    @Mapping(target = "category", source = "category_id", qualifiedByName = "idToCategory")
-    @Mapping(target = "unit", source = "unit_id", qualifiedByName = "idToUnit")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "kitchenId", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "category", source = "categoryId", qualifiedByName = "idToCategory")
+    @Mapping(target = "unit", source = "unitId", qualifiedByName = "idToUnit")
     public abstract InventoryItem toEntity(CreateInventoryItemRequestDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "created_at", ignore = true)
-    @Mapping(target = "kitchen_id", ignore = true)
-    @Mapping(target = "created_by", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "kitchenId", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "category", source = "categoryId", qualifiedByName = "idToCategory")
     @Mapping(target = "unit", source = "unitId", qualifiedByName = "idToUnit")
     public abstract void updateEntity(@MappingTarget InventoryItem entity, UpdateInventoryItemRequestDTO dto);

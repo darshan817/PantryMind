@@ -5,7 +5,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,24 +16,48 @@ import java.util.UUID;
 public class AiExtractedItems {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ocr_upload_id")
+    @Column(name = "ocr_upload_id", nullable = false)
     private Long ocrUploadId;
 
-    @Column(name = "item_name")
-    private Long itemName;
+    @Column(name = "raw_name", nullable = false)
+    private String rawName;
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @Column(name = "canonical_name")
+    private String canonicalName;
 
-    @Column(name = "predicted_expiry_date")
-    private LocalDate predictedExpiryDate;
+    @Column(name = "category_name")
+    private String categoryName;
 
-    private BigDecimal confidence;
+    private String brand;
 
-    @Column(name = "raw_ai_json", columnDefinition = "jsonb")
+    private Double quantity;
+
+    @Column(name = "unit_name")
+    private String unitName;
+
+    private Double price;
+
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+    @Column(name = "expiry_source")
+    private String expirySource;
+
+    @Column(name = "storage_type")
+    private String storageType;
+
+    @Column(name = "is_food")
+    private Boolean isFood;
+
+    private Double confidence;
+
+    @Column(name = "is_confirmed")
+    private Boolean isConfirmed = false;
+
+    @Column(name = "raw_ai_json", columnDefinition = "TEXT")
     private String rawAiJson;
 
     @Column(name = "created_at")

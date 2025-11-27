@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/inventory-items")
+@RequestMapping("/api/inventory")
 @RequiredArgsConstructor
 @Tag(name = "Inventory Items", description = "Inventory item management APIs")
 public class InventoryItemController {

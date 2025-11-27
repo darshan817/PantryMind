@@ -14,8 +14,12 @@ public class InventoryItem {
     private Long id;
     private String name;
     private String description;
-    private Long kitchen_id; //FK
-    private Long created_by; //FK
+    
+    @Column(name = "kitchen_id")
+    private Long kitchenId; // Changed to camelCase
+    
+    @Column(name = "created_by") 
+    private Long createdBy; // Changed to camelCase
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -24,10 +28,11 @@ public class InventoryItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id")
     private Unit unit;
+    
     private Long quantity;
     private String location;
     private Date expiryDate;
 
     @CreationTimestamp
-    private Date created_at;
+    private Date createdAt; // Changed to camelCase
 }

@@ -108,29 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(String token, String newPassword) {
-        // TODO: Validate token and update password
-        // For now, just log the action
+        
         System.out.println("Password reset with token: " + token);
     }
-
-
-    @Override
-    public void updateUserRole(Long userId, String roleName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        Role role = roleRepository.findByName(roleName)
-                .orElseGet(() -> roleRepository.save(Role.builder().name(roleName).build()));
-
-        user.setRole(role);
-        userRepository.save(user);
-    }
-
-    @Override
-    public UserResponseDTO getUserByEmail(String email) {
-        User user = userRepository.findByEmailWithRoleAndKitchen(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return userMapper.toResponse(user);
-    }
-
 }

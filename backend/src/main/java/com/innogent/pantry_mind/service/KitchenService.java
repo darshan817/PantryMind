@@ -10,10 +10,4 @@ public interface KitchenService {
     List<KitchenResponseDTO> getAll();
     KitchenResponseDTO update(Long id, KitchenRequestDTO requestDTO);
     void delete(Long id);
-
-    // Kitchen creation by admin
-    KitchenResponseDTO createKitchenWithAdmin(KitchenRequestDTO requestDTO, Long userId);
-    KitchenResponseDTO joinKitchen(Long kitchenId, Long userId);
-    KitchenResponseDTO joinKitchenByCode(String invitationCode, Long userId);
-    KitchenResponseDTO getUserKitchen(Long userId);
 }

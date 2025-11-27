@@ -1,88 +1,18 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import LandingPage from './pages/LandingPage'
-import { Login, Register, ForgotPassword, ResetPassword } from './pages/auth'
-import KitchenSetup from './pages/kitchen/KitchenSetup'
-import { AdminDashboard, MemberDashboard } from './pages/dashboard'
-import { ProtectedRoute, RoleBasedRoute } from './guards'
-import Header from './components/layout/Header'
-import InventoryList from './pages/inventory/InventoryList'
-import AddInventoryItem from './pages/inventory/AddInventoryItem'
-import EditInventoryItem from './pages/inventory/EditInventoryItem'
-
-// Component to redirect based on role
-function DashboardRedirect() {
-  const { user } = useSelector((state) => state.auth || {});
-  
-  console.log(" DashboardRedirect - User role:", user?.role);
-  
-  if (user?.role === "ADMIN") {
-    return <Navigate to="/admin" replace />;
-  } else if (user?.role === "MEMBER") {
-    return <Navigate to="/member" replace />;
-  } else {
-    return <Navigate to="/kitchen-setup" replace />;
-  }
-}
+import Register from './pages/Register'
+import Login from './pages/Login'
 
 function App() {
-  const { isAuthenticated } = useSelector((state) => state.auth || {});
   
+
   return (
     <BrowserRouter>
-      <Header />
       <Routes>
-        <Route path="/" element={isAuthenticated ? <DashboardRedirect /> : <LandingPage />} />
-        <Route path="/register" element={isAuthenticated ? <DashboardRedirect /> : <Register />} />
-        <Route path="/login" element={isAuthenticated ? <DashboardRedirect /> : <Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        
-        {/* Kitchen setup for users with no role or USER role */}
-        <Route path="/kitchen-setup" element={
-          <ProtectedRoute>
-            <KitchenSetup />
-          </ProtectedRoute>
-        } />
-        
-        {/* Admin Dashboard */}
-        <Route path="/admin" element={
-          <RoleBasedRoute allowedRoles={["ADMIN"]}>
-            <AdminDashboard />
-          </RoleBasedRoute>
-        } />
-        
-        {/* Member Dashboard */}
-        <Route path="/member" element={
-          <RoleBasedRoute allowedRoles={["MEMBER"]}>
-            <MemberDashboard />
-          </RoleBasedRoute>
-        } />
-        
-        {/* Inventory Routes */}
-        <Route path="/inventory" element={
-          <RoleBasedRoute allowedRoles={["ADMIN", "MEMBER"]}>
-            <InventoryList />
-          </RoleBasedRoute>
-        } />
-        <Route path="/inventory/add" element={
-          <RoleBasedRoute allowedRoles={["ADMIN", "MEMBER"]}>
-            <AddInventoryItem />
-          </RoleBasedRoute>
-        } />
-        <Route path="/inventory/edit/:id" element={
-          <RoleBasedRoute allowedRoles={["ADMIN", "MEMBER"]}>
-            <EditInventoryItem />
-          </RoleBasedRoute>
-        } />
-        
-        {/* Generic dashboard redirect */}
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <DashboardRedirect />
-          </ProtectedRoute>
-        } />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   )

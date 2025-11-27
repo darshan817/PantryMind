@@ -13,5 +13,4 @@ public interface KitchenMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "users", ignore = true)
     Kitchen toEntity(KitchenRequestDTO request);
-
 }

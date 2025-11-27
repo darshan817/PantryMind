@@ -33,7 +33,7 @@ public class User {
     @JoinColumn(name = "kitchen_id")
     private Kitchen kitchen;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 }

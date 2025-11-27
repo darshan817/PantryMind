@@ -24,7 +24,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public UnitResponseDTO create(UnitRequestDTO unitRequestDTO) {
-        if (unitRepository.existsByName(unitRequestDTO.getName())) {
+        if (unitRepository.findByName(unitRequestDTO.getName()).isPresent()) {
             throw new DuplicateResourceException("Unit with name '" + unitRequestDTO.getName() + "' already exists");
         }
         Unit unit = unitMapper.toEntity(unitRequestDTO);

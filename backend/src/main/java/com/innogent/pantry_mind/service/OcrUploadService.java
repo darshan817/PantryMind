@@ -20,13 +20,23 @@ public class OcrUploadService {
     }
 
     public OcrUpload uploadImage(MultipartFile file, Long kitchenId, Long uploadedBy) throws Exception {
-        Map uploadResult = cloudinary.uploader().upload(
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(
             file.getBytes(),
             ObjectUtils.asMap("folder", "ocr_uploads")
         );
         
         String imageUrl = uploadResult.get("secure_url").toString();
-        OcrUpload ocrUpload = new OcrUpload(kitchenId, uploadedBy, imageUrl);
+        
+        // Use Builder pattern instead of constructor
+        OcrUpload ocrUpload = OcrUpload.builder()
+            .kitchenId(kitchenId)
+            .uploadedBy(uploadedBy)
+            .cloudinaryUrl(imageUrl)
+            .cloudinaryPublicId(uploadResult.get("public_id").toString())
+            .originalFilename(file.getOriginalFilename())
+            .status(OcrUpload.ProcessingStatus.PENDING)
+            .build();
+            
         return ocrUploadRepository.save(ocrUpload);
     }
 }

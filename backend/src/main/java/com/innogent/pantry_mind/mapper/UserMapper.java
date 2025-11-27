@@ -6,7 +6,7 @@ import com.innogent.pantry_mind.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {KitchenMapper.class})
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "kitchen", ignore = true)
@@ -17,7 +17,5 @@ public interface UserMapper {
     @Mapping(target = "passwordHash", source = "password")
     User toUser(RegisterRequestDTO request);
 
-    @Mapping(target = "role", source = "role.name")
-    @Mapping(target = "kitchen", source = "kitchen")
     UserResponseDTO toResponse(User user);
 }

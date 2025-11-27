@@ -16,21 +16,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)  // Add this annotation
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        com.innogent.pantry_mind.entity.User user = userRepository.findByEmailWithRole(email)
+        com.innogent.pantry_mind.entity.User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
         
-        // Fix lazy loading issue
-        String roleName = "USER"; // Default role
-        if (user.getRole() != null) {
-            try {
-                roleName = user.getRole().getName();
-            } catch (Exception e) {
-                // If lazy loading fails, use default
-                roleName = "USER";
-            }
-        }
+        String roleName = user.getRole() != null ? user.getRole().getName() : "USER";
         
         return User.builder()
                 .username(user.getEmail())
